@@ -1,7 +1,7 @@
 # Complex-Algorithms
-This repository contains completed assignments from the Complex Algorithms &amp; Datastructures course provided by the University of San Diego. These assignments were completed for fun, and have no connection to the University itself. 
+This repository contains completed assignments from the 2016 Complex Algorithms &amp; Datastructures course provided by the University of San Diego. These assignments were completed for fun, and have no connection to the University itself. 
 
-The following assignments have been completed: 
+The assignments consist of the following elements: 
 - Flows in Networks
     - **Evacuation Assignment**: Apply a maximum flow algorithm in a network to determine the fastest time in which people can be evacuated from a given city.
     - **Airline Crew**: Apply a flow algorithm for matching in a bipartite graph to assign airline crews to flights in the most efficient way.
