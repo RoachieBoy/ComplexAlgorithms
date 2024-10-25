@@ -15,6 +15,8 @@ internal class CityNetwork
 
     internal CityNetwork(int numberOfCities)
     {
+        if (numberOfCities < 1) return;
+        
         NumberOfCities = numberOfCities;
         AdjacencyList = new IList<Road>[NumberOfCities + 1];
 
@@ -25,7 +27,14 @@ internal class CityNetwork
         }
     }
 
-    internal void InitialiseRoad(int startPoint, int endPoint, int hourlyCapacity, IList<Road> roads)
+    /// <summary>
+    ///  Initialises a new instance of a road and adds the forward and reversed
+    ///  path of this road to the adjacency list 
+    /// </summary>
+    /// <param name="startPoint"> the starting location of the road </param>
+    /// <param name="endPoint"> the location the road leads to </param>
+    /// <param name="hourlyCapacity"> the maximum hourly capacity of the road </param>
+    internal void InitialiseRoad(int startPoint, int endPoint, int hourlyCapacity)
     {
         var forwardRoad = new Road(startPoint, endPoint, hourlyCapacity);
         // Capacity has a starting value of 0 because you can't go backwards before you have gone forwards 
