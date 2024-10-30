@@ -20,7 +20,7 @@ internal class Road
     /// <summary>
     ///  The current flow of people on the road 
     /// </summary>
-    internal int CurrentFlow { get; }
+    internal int CurrentFlow { get; set; }
 
     /// <summary>
     ///  The remaining capacity still left on the road 

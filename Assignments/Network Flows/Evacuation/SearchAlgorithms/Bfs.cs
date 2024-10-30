@@ -1,6 +1,6 @@
 namespace Evacuation.SearchAlgorithms;
 
-internal class Bfs: ISearchAlgorithm
+public class Bfs: ISearchAlgorithm
 {
     public static void TraverseTree<T>(T startingNode, Func<T, IEnumerable<T>> children)
     {

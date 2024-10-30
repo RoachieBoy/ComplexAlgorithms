@@ -1,13 +1,16 @@
-﻿// determine the maximum number of people that can be evacuated per hour given the capacity of
-// all the roads 
+﻿using Evacuation;
 
-// 1. determine capacity of each road
-// 2. consider the time 
-// 3. determine amount of people 
+var roads = new List<(int StartPoint, int EndPoint, int HourlyCapacity)>
+{
+    (1, 2, 10),
+    (2, 3, 15),
+    (3, 4, 20),
+    (4, 5, 25),
+    (5, 1, 30)
+};
 
-using Evacuation;
+var city = new CityNetwork(5, roads); 
 
-var test = new EvacuationHandler();
-
-Console.WriteLine("hiii");
+// test code
+Console.WriteLine(city);
 

@@ -3,11 +3,10 @@ namespace Evacuation.SearchAlgorithms;
 internal interface ISearchAlgorithm
 {
     /// <summary>
-    ///  Traverses a tree using the implementation of the search algorithm 
+    ///  Traverses a tree using the implementation of a given search algorithm 
     /// </summary>
-    /// <param name="startingNode"> node to begin the path from </param>
-    /// <param name="children"> children closest to said node </param>
-    /// <param name="process"> process the node once it has been visited </param>
-    /// <typeparam name="T">Type that the node is </typeparam>
+    /// <param name="startingNode"> Node to begin the path from. </param>
+    /// <param name="children"> Children closest to said node. </param>
+    /// <typeparam name="T">Type that represents a node in the graph. </typeparam>
     public static abstract void TraverseTree<T>(T startingNode, Func<T, IEnumerable<T>> children);
 }
