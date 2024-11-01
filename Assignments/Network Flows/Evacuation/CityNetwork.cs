@@ -4,16 +4,8 @@ namespace Evacuation;
 
 internal class CityNetwork
 {
-    /// <summary>
-    ///  Number of cities that are contained within the network 
-    /// </summary>
     private int NumberOfCities { get; set; }
-
-    /// <summary>
-    ///  A collection of lists where each index represents a city in the network
-    ///  and each list is made up of roads that connect the city to other cities 
-    /// </summary>
-    private IList<Road>[] AdjacencyList { get; set; }
+    private IList<Road>[] AdjacencyList { get; set; } = [];
 
     /// <summary>
     ///  Creates an instance of a CityNetwork that needs to be evacuated.
@@ -25,12 +17,40 @@ internal class CityNetwork
         FillAdjacencyList(numberOfCities);
         InitialiseRoads(roads);
     }
+    
+    /// <summary>
+    ///  Returns the neighbours of the current road where there is still capacity for flow left
+    /// </summary>
+    internal IEnumerable<int> GetNeighbours(int city)
+    {
+        return from road in AdjacencyList[city] where road.RemainingCapacity >= 0 select road.EndCity;
+    }
+    
+    /// <summary>
+    ///  Returns the remaining capacity of the current road 
+    /// </summary>
+    internal int GetRemainingCapacity(int startPoint, int endPoint)
+    {
+        return GetCurrentRoad(startPoint, endPoint).RemainingCapacity;
+    }
+
+    internal void UpdateFlow(int startPoint, int endPoint, int currentFlow)
+    {
+        var road = GetCurrentRoad(startPoint, endPoint);
+        road.CurrentFlow += currentFlow;
+        road.Reversed.CurrentFlow -= currentFlow;
+    }
+    
+    private Road GetCurrentRoad(int startPoint, int endPoint)
+    {
+        return AdjacencyList[startPoint].FirstOrDefault(road => road.EndCity == endPoint) 
+               ?? throw new InvalidOperationException("No road found");
+    }
 
     private void InitialiseRoads(IList<(int start, int end, int capacity)> roads)
     {
-        if (roads.Count > 1)
+        if (roads.Count < 1)
         {
-            Debug.WriteLine($"{nameof(roads)} is empty, but a ciy network must contain at least one road.");
             return;
         }
 
@@ -69,6 +89,9 @@ internal class CityNetwork
         var forwardRoad = new Road(startPoint, endPoint, hourlyCapacity);
         // Capacity has a starting value of 0 because you can't go backwards before you have gone forwards 
         var backwardRoad = new Road(endPoint, startPoint, 0);
+        
+        forwardRoad.Reversed = backwardRoad;
+        backwardRoad.Reversed = forwardRoad;
         
         // Represents the path forward from the starting city to the main city
         AdjacencyList[startPoint].Add(forwardRoad);

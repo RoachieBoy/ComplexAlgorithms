@@ -3,34 +3,29 @@ namespace Evacuation;
 internal class Road
 {
     /// <summary>
-    ///  The point on the graph from which the road begins
+    ///  The point on the graph where the road ends 
     /// </summary>
-    private int StartPoint { get; set; }
-    
-    /// <summary>
-    ///  The point on the graph where the road ends
-    /// </summary>
-    private int EndPoint { get; set; }
-    
-    /// <summary>
-    ///  The maximum capacity a road can handle at any given hour 
-    /// </summary>
-    private int HourlyCapacity{ get; }
-    
+    internal int EndCity { get; }
     /// <summary>
     ///  The current flow of people on the road 
     /// </summary>
     internal int CurrentFlow { get; set; }
-
+    /// <summary>
+    ///  Represents the road in its reversed trajectory 
+    /// </summary>
+    internal Road Reversed { get; set; }
+    private int HourlyCapacity{ get; }
+    private int StartCity { get; set; }
+    
     /// <summary>
     ///  The remaining capacity still left on the road 
     /// </summary>
     internal int RemainingCapacity => HourlyCapacity - CurrentFlow;
     
-    internal Road(int startPoint, int endPoint, int hourlyCapacity)
+    internal Road(int startCity, int endCity, int hourlyCapacity)
     {
-        StartPoint = startPoint;
-        EndPoint = endPoint;
+        StartCity = startCity;
+        EndCity = endCity;
         HourlyCapacity = hourlyCapacity;
     }
 }

@@ -1,16 +1,20 @@
 ﻿using Evacuation;
+using Evacuation.Utilities;
 
-var roads = new List<(int StartPoint, int EndPoint, int HourlyCapacity)>
+var roads = new List<(int start, int end, int capacity)>
 {
-    (1, 2, 10),
-    (2, 3, 15),
-    (3, 4, 20),
-    (4, 5, 25),
-    (5, 1, 30)
+    (1, 2, 2), 
+    (2, 5, 5), 
+    (1, 3, 6), 
+    (3, 4, 2), 
+    (4, 5, 1), 
+    (3, 2, 3),  
+    (2, 4, 1)   
 };
 
-var city = new CityNetwork(5, roads); 
+var cityNetwork = new CityNetwork(5, roads); 
+var maxFlow = MaxFlowUtilities.FindMaxFlow(1, 5, cityNetwork.GetNeighbours, 
+    cityNetwork.GetRemainingCapacity, cityNetwork.UpdateFlow, SearchAlgorithmType.FordFulkerson);
 
-// test code
-Console.WriteLine(city);
+Console.WriteLine(maxFlow);
 
