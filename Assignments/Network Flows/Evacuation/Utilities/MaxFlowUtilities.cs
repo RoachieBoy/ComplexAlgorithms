@@ -2,57 +2,70 @@ namespace Evacuation.Utilities;
 
 public static class MaxFlowUtilities
 {
-    public static int FindMaxFlow<T>(T source, T sink, Func<T, IEnumerable<T>> getNeighbors, 
-        Func<T, T, int> getRemainingCapacity, Action<T, T, int> updateFlow, SearchAlgorithmType searchAlgorithmType) 
-        where T : notnull
+    public static int FindMaxFlow(int[,] graph, int source, int sink, int vertexCount, MaxFlowAlgorithmTypes maxFlowAlgorithmTypes)
     {
-        return searchAlgorithmType switch
-        {
-            SearchAlgorithmType.FordFulkerson => FordFulkerson(source, sink, getNeighbors, getRemainingCapacity, updateFlow),
-            SearchAlgorithmType.EdmondKarp => default,
-            _ => throw new ArgumentException("Invalid search type specified.")
-        };
-    }
+        var residualGraph = GenerateResidualGraph(graph, vertexCount);
 
-    private static int FordFulkerson<T>(T source, T sink, Func<T, IEnumerable<T>> getNeighbors,
-        Func<T, T, int> getRemainingCapacity, Action<T, T, int> updateFlow) where T : notnull
-    {
+        var parent = new int[vertexCount];
         var maxFlow = 0;
-
-        while (true)
+        bool hasAugmentedPath;
+        
+        do
         {
-            // Use DFS to find an augmenting path
-            var augmentedPathFound = SearchAlgorithmUtilities.Dfs(
-                source,
-                getNeighbors,
-                node => EqualityComparer<T>.Default.Equals(node, sink),
-                out var parentMap
-            );
-
-            // If no augmenting path is found, exit the loop
-            if (!augmentedPathFound) break;
-
-            // Determine the bottleneck capacity in the found path
-            var pathFlow = int.MaxValue;
-            
-            for (var t = sink; !EqualityComparer<T>.Default.Equals(t, source); t = parentMap[t])
+            hasAugmentedPath = maxFlowAlgorithmTypes switch
             {
-                var s = parentMap[t];
-                pathFlow = Math.Min(pathFlow, getRemainingCapacity(s, t));
-            }
+                MaxFlowAlgorithmTypes.FordFulkerson => SearchAlgorithmUtilities
+                    .LocatedAugmentedPathWithDfs(residualGraph, source, sink, parent, vertexCount),
+                MaxFlowAlgorithmTypes.EdmondKarp => SearchAlgorithmUtilities
+                    .LocatedAugmentedPathWithBfs(residualGraph, source, sink, parent, vertexCount),
+                _ => throw new InvalidOperationException("Invalid algorithm provided")
+            };
 
-            // Update the flow values along the path
-            for (var t = sink; !EqualityComparer<T>.Default.Equals(t, source); t = parentMap[t])
-            {
-                var s = parentMap[t];
-                updateFlow(s, t, pathFlow);
-                updateFlow(t, s, -pathFlow);
-            }
+            if (!hasAugmentedPath) continue;
+            maxFlow += CalculatePathFlow(source, sink, parent, residualGraph);
 
-            // Add the bottleneck capacity to the overall max flow
-            maxFlow += pathFlow;
-        }
+        } while (hasAugmentedPath);
 
         return maxFlow;
+    }
+
+    private static int CalculatePathFlow(int source, int sink, int[] parent, int[,] residualGraph)
+    {
+        var pathFlow = int.MaxValue;
+        int v;
+        int u;
+            
+        for (v = sink; v != source; v = parent[v])
+        {
+            u = parent[v];
+            pathFlow = Math.Min(pathFlow, residualGraph[u, v]);
+        }
+
+        // Update residual capacities of the edges and reverse edges
+        for (v = sink; v != source; v = parent[v])
+        {
+            u = parent[v];
+            residualGraph[u, v] -= pathFlow;
+            residualGraph[v, u] += pathFlow;
+        }
+
+        return pathFlow;
+    }
+
+    private static int[,] GenerateResidualGraph(int[,] graph, int vertexCount)
+    {
+        int u;
+        var residualGraph = new int[vertexCount, vertexCount];
+        
+        for (u = 0; u < vertexCount; u++)
+        {
+            int v;
+            for (v = 0; v < vertexCount; v++)
+            {
+                residualGraph[u, v] = graph[u, v];
+            }
+        }
+
+        return residualGraph;
     }
 }

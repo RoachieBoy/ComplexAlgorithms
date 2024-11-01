@@ -1,20 +1,35 @@
-﻿using Evacuation;
+﻿using System.Diagnostics;
 using Evacuation.Utilities;
 
-var roads = new List<(int start, int end, int capacity)>
+var stopwatch = Stopwatch.StartNew();
+
+// sample one from assignment 
+var graph = new[,]
 {
-    (1, 2, 2), 
-    (2, 5, 5), 
-    (1, 3, 6), 
-    (3, 4, 2), 
-    (4, 5, 1), 
-    (3, 2, 3),  
-    (2, 4, 1)   
+    { 0, 2, 6, 0, 0 },
+    { 0, 0, 0, 1, 5 },
+    { 0, 3, 0, 2, 0 },
+    { 0, 0, 0, 0, 1 },
+    { 0, 0, 0, 0, 0 }
 };
 
-var cityNetwork = new CityNetwork(5, roads); 
-var maxFlow = MaxFlowUtilities.FindMaxFlow(1, 5, cityNetwork.GetNeighbours, 
-    cityNetwork.GetRemainingCapacity, cityNetwork.UpdateFlow, SearchAlgorithmType.FordFulkerson);
+// sample 2 from assignment 
+var graph2 = new[,]
+{
+    { 0, 10000, 10000, 0 },
+    { 0, 0, 1, 10000 },
+    { 0, 0, 0, 10000 },
+    { 0, 0, 0, 0 }
+};
 
-Console.WriteLine(maxFlow);
+var maxFlow = MaxFlowUtilities.FindMaxFlow(graph, 0, 4, 5, MaxFlowAlgorithmTypes.EdmondKarp);
+var maxFlowFulkerson = MaxFlowUtilities.FindMaxFlow(graph2, 0, 3, 4, MaxFlowAlgorithmTypes.FordFulkerson);
+
+stopwatch.Stop();
+
+Console.WriteLine(maxFlow); 
+Console.WriteLine(maxFlowFulkerson);
+Console.WriteLine($"Time taken: {stopwatch.ElapsedMilliseconds} ms"); 
+
+
 

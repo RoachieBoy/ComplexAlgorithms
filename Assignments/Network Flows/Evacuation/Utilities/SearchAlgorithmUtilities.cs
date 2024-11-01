@@ -2,58 +2,62 @@ namespace Evacuation.Utilities;
 
 public static class SearchAlgorithmUtilities
 {
-    public static bool Dfs<T>(T source, Func<T, IEnumerable<T>> getChildren, Func<T, bool> isSinkNode, 
-        out Dictionary<T, T> parentMap) where T : notnull
+    public static bool LocatedAugmentedPathWithDfs(int[,] residualGraph, int source, int sink, int[] parent, int numVertices)
     {
-        parentMap = new Dictionary<T, T>();
-        var visitedNodes = new HashSet<T>();
-        var stack = new Stack<T>(); 
-        
+        // Keep track of whether a vertex has been visited or not 
+        var visited = new bool[numVertices];
+        var stack = new Stack<int>();
+
         stack.Push(source);
-        visitedNodes.Add(source);
-        parentMap[source] = default; 
+        visited[source] = true;
+        // Set to -1 because source node has no parent 
+        parent[source] = -1;
 
         while (stack.Count > 0)
         {
-            var currentNode = stack.Pop();
-            
-            if (isSinkNode(currentNode)) return true;
+            var u = stack.Pop();
 
-            foreach (var child in getChildren(currentNode))
+            for (var v = 0; v < numVertices; v++)
             {
-                if (visitedNodes.Contains(child)) continue;
+                if (visited[v] || residualGraph[u, v] <= 0) continue;
                 
-                stack.Push(child);
-                visitedNodes.Add(child);
-                parentMap[child] = currentNode;
+                stack.Push(v);
+                parent[v] = u;
+                visited[v] = true;
+
+                // The augmented path has been found once we reach target node 
+                if (v == sink) return true;
             }
         }
-
-        return false; 
+        return false;
     }
-    
-    public static void Bfs<T>(T rootNode, Func<T, IEnumerable<T>> getChildren)
+
+    public static bool LocatedAugmentedPathWithBfs(int[,] residualGraph, int source, int sink, int[] parent, int numVertices)
     {
-        if (rootNode == null || getChildren == null || !getChildren(rootNode).Any()) return;
+        // Keep track of whether a vertex has been visited or not 
+        var visited = new bool[numVertices];
+        var queue = new Queue<int>();
         
-        var visitedNodes = new HashSet<T>();
-        var queue = new Queue<T>();
-        
-        queue.Enqueue(rootNode);
+        queue.Enqueue(source);
+        visited[source] = true;
+        parent[source] = -1;
 
         while (queue.Count > 0)
         {
-            var currentNode = queue.Dequeue();
+            var u = queue.Dequeue();
 
-            if (!visitedNodes.Add(currentNode)) continue;
-
-            foreach (var node in getChildren(currentNode))
+            for (var v = 0; v < numVertices; v++)
             {
-                if (!visitedNodes.Contains(node)) 
-                {
-                    queue.Enqueue(node);
-                } 
+                if (visited[v] || residualGraph[u, v] <= 0) continue;
+                
+                queue.Enqueue(v);
+                parent[v] = u;
+                visited[v] = true;
+                
+                // The augmented path has been found once we reach target node 
+                if (v == sink) return true;
             }
         }
+        return false;
     }
 }

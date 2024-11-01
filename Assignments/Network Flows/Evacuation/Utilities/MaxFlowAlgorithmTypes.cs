@@ -1,6 +1,6 @@
 namespace Evacuation.Utilities;
 
-public enum SearchAlgorithmType
+public enum MaxFlowAlgorithmTypes
 {
     FordFulkerson, 
     EdmondKarp
