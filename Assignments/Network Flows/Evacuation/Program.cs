@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Evacuation;
 using Evacuation.Utilities;
 
 var stopwatch = Stopwatch.StartNew();
@@ -27,9 +28,6 @@ var maxFlowFulkerson = MaxFlowUtilities.FindMaxFlow(graph2, 0, 3, 4, MaxFlowAlgo
 
 stopwatch.Stop();
 
-Console.WriteLine(maxFlow); 
+Console.WriteLine(maxFlow);
 Console.WriteLine(maxFlowFulkerson);
-Console.WriteLine($"Time taken: {stopwatch.ElapsedMilliseconds} ms"); 
-
-
-
+Console.WriteLine($"Time taken: {stopwatch.ElapsedMilliseconds} ms");

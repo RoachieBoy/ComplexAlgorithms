@@ -2,7 +2,20 @@ namespace Evacuation.Utilities;
 
 public static class SearchAlgorithmUtilities
 {
-    public static bool LocatedAugmentedPathWithDfs(int[,] residualGraph, int source, int sink, int[] parent, int numVertices)
+    /// <summary>
+    /// Determines if there is an augmented path from the source node to the sink node 
+    /// in the residual graph using Depth-First Search (DFS).
+    /// </summary>
+    /// <param name="residualGraph">A 2D array representing the residual capacities of the graph edges.</param>
+    /// <param name="source">The source node where the search starts.</param>
+    /// <param name="sink">The sink node where the search is aimed to reach.</param>
+    /// <param name="parent">An array to store the path from source to sink; 
+    /// each index represents the parent of that node in the path.</param>
+    /// <param name="numVertices">The number of vertices in the graph.</param>
+    /// <returns>
+    /// Returns <c>true</c> if an augmented path from source to sink exists; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool HasFoundAugmentedPathWithDfs(int[,] residualGraph, int source, int sink, int[] parent, int numVertices)
     {
         // Keep track of whether a vertex has been visited or not 
         var visited = new bool[numVertices];
@@ -20,24 +33,38 @@ public static class SearchAlgorithmUtilities
             for (var v = 0; v < numVertices; v++)
             {
                 if (visited[v] || residualGraph[u, v] <= 0) continue;
-                
+
                 stack.Push(v);
                 parent[v] = u;
                 visited[v] = true;
 
-                // The augmented path has been found once we reach target node 
+                // The augmented path has been found once we reach target node                                           
                 if (v == sink) return true;
             }
         }
+
         return false;
     }
 
-    public static bool LocatedAugmentedPathWithBfs(int[,] residualGraph, int source, int sink, int[] parent, int numVertices)
+    /// <summary>
+    /// Determines if there is an augmented path from the source node to the sink node 
+    /// in the residual graph using Breadth-First Search (BFS).
+    /// </summary>
+    /// <param name="residualGraph">A 2D array representing the residual capacities of the graph edges.</param>
+    /// <param name="source">The source node where the search begins.</param>
+    /// <param name="sink">The sink node where the search is aimed to reach.</param>
+    /// <param name="parent">An array to store the path from source to sink; 
+    /// each index represents the parent of that node in the path.</param>
+    /// <param name="numVertices">The number of vertices in the graph.</param>
+    /// <returns>
+    /// Returns <c>true</c> if an augmented path from source to sink exists; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool HasFoundAugmentedPathWithBfs(int[,] residualGraph, int source, int sink, int[] parent, int numVertices)
     {
         // Keep track of whether a vertex has been visited or not 
         var visited = new bool[numVertices];
         var queue = new Queue<int>();
-        
+
         queue.Enqueue(source);
         visited[source] = true;
         parent[source] = -1;
@@ -49,15 +76,16 @@ public static class SearchAlgorithmUtilities
             for (var v = 0; v < numVertices; v++)
             {
                 if (visited[v] || residualGraph[u, v] <= 0) continue;
-                
+
                 queue.Enqueue(v);
                 parent[v] = u;
                 visited[v] = true;
-                
+
                 // The augmented path has been found once we reach target node 
                 if (v == sink) return true;
             }
         }
+
         return false;
     }
 }
