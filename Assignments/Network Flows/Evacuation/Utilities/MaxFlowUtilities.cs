@@ -1,26 +1,27 @@
+using System.Numerics;
+
 namespace Evacuation.Utilities;
 
 public static class MaxFlowUtilities
 {
     /// <summary>
-    ///  Find the max flow for a given graph/network.
+    ///     Find the max flow for a given graph/network.
     /// </summary>
     /// <param name="graph"> The graph to analyse. </param>
     /// <param name="source"> The source node of the graph. </param>
     /// <param name="sink"> The end node of the graph. </param>
-    /// <param name="vertexCount"> The number of vertices in the graph </param>
     /// <param name="maxFlowAlgorithmTypes"> Which type of max flow algorithm to implement to calculate the max flow. </param>
     /// <returns> An int representing the max flow of the graph. </returns>
-    public static int FindMaxFlow(
-        int[,] graph, 
-        int source, 
-        int sink, 
-        int vertexCount,
+    public static T FindMaxFlow<T>(
+        Graph<T> graph,
+        int source,
+        int sink,
         MaxFlowAlgorithmTypes maxFlowAlgorithmTypes)
+        where T : INumber<T>
     {
-        var residualGraph = GenerateResidualGraph(graph, vertexCount);
-        var parent = new int[vertexCount];
-        var maxFlow = 0;
+        var residualGraph = GenerateResidualGraph(graph);
+        var parent = new int[graph.NumberOfNodes];
+        var maxFlow = T.Zero;
         bool hasAugmentedPath;
 
         do
@@ -33,7 +34,7 @@ public static class MaxFlowUtilities
                         source,
                         sink,
                         parent,
-                        vertexCount
+                        graph.NumberOfNodes
                     ),
                 MaxFlowAlgorithmTypes.EdmondKarp =>
                     SearchAlgorithmUtilities.HasFoundAugmentedPathWithBfs(
@@ -41,7 +42,7 @@ public static class MaxFlowUtilities
                         source,
                         sink,
                         parent,
-                        vertexCount
+                        graph.NumberOfNodes
                     ),
                 _ => throw new InvalidOperationException("Invalid algorithm provided")
             };
@@ -53,15 +54,20 @@ public static class MaxFlowUtilities
         return maxFlow;
     }
 
-    private static int CalculatePathFlow(int source, int sink, int[] parent, int[,] residualGraph)
+    private static T CalculatePathFlow<T>(
+        int source,
+        int sink,
+        int[] parent,
+        T[,] residualGraph)
+        where T : INumber<T>
     {
-        var pathFlow = int.MaxValue;
+        var pathFlow = NumericalUtilities.MaxValue<T>();
         int v, u;
-        
+
         for (v = sink; v != source; v = parent[v])
         {
             u = parent[v];
-            pathFlow = Math.Min(pathFlow, residualGraph[u, v]);
+            pathFlow = T.Min(pathFlow, residualGraph[u, v]);
         }
 
         // Update residual capacities of the edges and reverse edges
@@ -74,16 +80,17 @@ public static class MaxFlowUtilities
 
         return pathFlow;
     }
-    
-    private static int[,] GenerateResidualGraph(int[,] graph, int vertexCount)
+
+    private static T[,] GenerateResidualGraph<T>(Graph<T> graph) where T : INumber<T>
     {
         int u;
-        var residualGraph = new int[vertexCount, vertexCount];
+        var vertexCount = graph.NumberOfNodes;
+        var residualGraph = new T[vertexCount, vertexCount];
 
         for (u = 0; u < vertexCount; u++)
         {
             int v;
-            for (v = 0; v < vertexCount; v++) residualGraph[u, v] = graph[u, v];
+            for (v = 0; v < vertexCount; v++) residualGraph[u, v] = graph.GetAdjacencyMatrix()[u, v];
         }
 
         return residualGraph;

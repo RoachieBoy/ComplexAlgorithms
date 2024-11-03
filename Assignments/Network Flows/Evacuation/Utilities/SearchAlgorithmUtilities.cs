@@ -1,21 +1,31 @@
+using System.Numerics;
+
 namespace Evacuation.Utilities;
 
 public static class SearchAlgorithmUtilities
 {
     /// <summary>
-    /// Determines if there is an augmented path from the source node to the sink node 
-    /// in the residual graph using Depth-First Search (DFS).
+    ///     Determines if there is an augmented path from the source node to the sink node
+    ///     in the residual graph using Depth-First Search (DFS).
     /// </summary>
     /// <param name="residualGraph">A 2D array representing the residual capacities of the graph edges.</param>
     /// <param name="source">The source node where the search starts.</param>
     /// <param name="sink">The sink node where the search is aimed to reach.</param>
-    /// <param name="parent">An array to store the path from source to sink; 
-    /// each index represents the parent of that node in the path.</param>
+    /// <param name="parent">
+    ///     An array to store the path from source to sink;
+    ///     each index represents the parent of that node in the path.
+    /// </param>
     /// <param name="numVertices">The number of vertices in the graph.</param>
     /// <returns>
-    /// Returns <c>true</c> if an augmented path from source to sink exists; otherwise, <c>false</c>.
+    ///     Returns <c>true</c> if an augmented path from source to sink exists; otherwise, <c>false</c>.
     /// </returns>
-    public static bool HasFoundAugmentedPathWithDfs(int[,] residualGraph, int source, int sink, int[] parent, int numVertices)
+    public static bool HasFoundAugmentedPathWithDfs<T>(
+        T[,] residualGraph,
+        int source,
+        int sink,
+        int[] parent,
+        int numVertices)
+        where T : INumber<T>
     {
         // Keep track of whether a vertex has been visited or not 
         var visited = new bool[numVertices];
@@ -32,7 +42,7 @@ public static class SearchAlgorithmUtilities
 
             for (var v = 0; v < numVertices; v++)
             {
-                if (visited[v] || residualGraph[u, v] <= 0) continue;
+                if (visited[v] || residualGraph[u, v] <= T.Zero) continue;
 
                 stack.Push(v);
                 parent[v] = u;
@@ -47,19 +57,27 @@ public static class SearchAlgorithmUtilities
     }
 
     /// <summary>
-    /// Determines if there is an augmented path from the source node to the sink node 
-    /// in the residual graph using Breadth-First Search (BFS).
+    ///     Determines if there is an augmented path from the source node to the sink node
+    ///     in the residual graph using Breadth-First Search (BFS).
     /// </summary>
     /// <param name="residualGraph">A 2D array representing the residual capacities of the graph edges.</param>
     /// <param name="source">The source node where the search begins.</param>
     /// <param name="sink">The sink node where the search is aimed to reach.</param>
-    /// <param name="parent">An array to store the path from source to sink; 
-    /// each index represents the parent of that node in the path.</param>
+    /// <param name="parent">
+    ///     An array to store the path from source to sink;
+    ///     each index represents the parent of that node in the path.
+    /// </param>
     /// <param name="numVertices">The number of vertices in the graph.</param>
     /// <returns>
-    /// Returns <c>true</c> if an augmented path from source to sink exists; otherwise, <c>false</c>.
+    ///     Returns <c>true</c> if an augmented path from source to sink exists; otherwise, <c>false</c>.
     /// </returns>
-    public static bool HasFoundAugmentedPathWithBfs(int[,] residualGraph, int source, int sink, int[] parent, int numVertices)
+    public static bool HasFoundAugmentedPathWithBfs<T>(
+        T[,] residualGraph,
+        int source,
+        int sink,
+        int[] parent,
+        int numVertices)
+        where T : INumber<T>
     {
         // Keep track of whether a vertex has been visited or not 
         var visited = new bool[numVertices];
@@ -75,7 +93,7 @@ public static class SearchAlgorithmUtilities
 
             for (var v = 0; v < numVertices; v++)
             {
-                if (visited[v] || residualGraph[u, v] <= 0) continue;
+                if (visited[v] || residualGraph[u, v] <= T.Zero) continue;
 
                 queue.Enqueue(v);
                 parent[v] = u;

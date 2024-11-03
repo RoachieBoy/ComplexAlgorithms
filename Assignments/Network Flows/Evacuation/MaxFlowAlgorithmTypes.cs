@@ -2,6 +2,6 @@ namespace Evacuation;
 
 public enum MaxFlowAlgorithmTypes
 {
-    FordFulkerson, 
+    FordFulkerson,
     EdmondKarp
 }
