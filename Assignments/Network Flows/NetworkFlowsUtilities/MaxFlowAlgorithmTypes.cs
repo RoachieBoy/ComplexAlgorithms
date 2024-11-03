@@ -1,4 +1,4 @@
-namespace Evacuation;
+namespace NetworkFlowsUtilities;
 
 public enum MaxFlowAlgorithmTypes
 {

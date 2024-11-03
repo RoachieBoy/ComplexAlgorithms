@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Evacuation.Utilities;
+namespace NetworkFlowsUtilities;
 
 public static class SearchAlgorithmUtilities
 {

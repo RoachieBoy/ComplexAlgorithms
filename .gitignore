@@ -4,8 +4,13 @@
 # General 
 *.sln
 .idea
+*sln.DotSettings.user
 
 # project files Network Flows
 */Network Flows/Evacuation/obj
 */Network Flows/Evacuation/bin
+*/Network Flows/Airlines/obj
+*/Network Flows/Airlines/bin
+*/Network Flows/NetworkFlowsUtilities/obj
+*/Network Flows/NetworkFlowsUtilities/bin
 

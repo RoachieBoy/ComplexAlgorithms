@@ -1,4 +1,4 @@
-namespace Evacuation.Utilities;
+namespace NetworkFlowsUtilities;
 
 public static class NumericalUtilities
 {

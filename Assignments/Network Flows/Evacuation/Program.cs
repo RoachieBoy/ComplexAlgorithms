@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
-using Evacuation;
-using Evacuation.Utilities;
+using NetworkFlowsUtilities;
 
 var stopwatch = Stopwatch.StartNew();
 

@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Evacuation.Utilities;
+namespace NetworkFlowsUtilities;
 
 public class Graph<T>(int numberOfNodes) where T : INumber<T>
 {
