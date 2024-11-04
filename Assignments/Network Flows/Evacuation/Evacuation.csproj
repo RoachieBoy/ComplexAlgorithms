@@ -8,8 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+      <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.14.0" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Reference Include="NetworkFlowsUtilities">
-        <HintPath>..\NetworkFlowsUtilities\bin\Debug\net8.0\NetworkFlowsUtilities.dll</HintPath>
+        <HintPath>..\NetworkFlowsUtilities\bin\Release\net8.0\NetworkFlowsUtilities.dll</HintPath>
       </Reference>
     </ItemGroup>
 
